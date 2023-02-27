@@ -73,8 +73,11 @@ class ESN:
 
         ## iteration over epochs
         for epoch in range(self.epochs):
-
-            self.y_tf = 0
+            
+            if self.N_y>1:
+                self.y_tf = np.zeros(self.N_y)
+            else:
+                self.y_tf = 0
 
             ## Iteration over the train data
             for i in range(X.shape[0]):
@@ -100,16 +103,14 @@ class ESN:
     def predict(self,test_input, test_label):
 
         predictions = []
-        for u in range(len(test_input)):
-            self.x = self.update(self.x,test_input[u][:, np.newaxis],self.y_tf)
-            self.y_tf = test_label[u]
-            design_matrix = np.squeeze(np.vstack([np.reshape(1,(-1,1)),
-                                                test_input[u][:, np.newaxis],
-                                                self.x]))
+        for i in range(len(test_input)):
+            self.x = self.update(self.x,test_input[i][:, np.newaxis],self.y_tf)
+            self.y_tf = test_label[i]
+            design_matrix = np.squeeze(np.vstack([1,test_input[i][:, np.newaxis],self.x]))
             predictions.append(self.W_out @ design_matrix)
-
+            
             if self.verbose:
-                print(f"Prediction {u}: {predictions[u]}")
+                print(f"Prediction {i}: {predictions[i]}")
         
         return predictions 
                 

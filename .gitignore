@@ -1,2 +1,4 @@
 streamlit-esn-env
 *.pyc
+.ipynb_checkpoints
+*checkpoint.ipynb
